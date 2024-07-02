@@ -112,7 +112,15 @@ public:
     }
 
 
+    bool playerLost(int player_id) {
+        if (players[player_id].money < 0) return true;
+        return false;
+    }
 
+    bool playerWon(int player_id) {
+        if (players[player_id].money >50000) return true;
+        return false;
+    }
 
     void processAuctions() {
         // Process buy offers
@@ -211,7 +219,12 @@ public:
         players[player_id].raw_material -= players[player_id].products_processing;
     }
 
-
+    bool gameEnd() {
+        if (players.size() < 2) return true;
+        for (auto player : players) {
+            if (playerWon(player.id)) return true;
+        }
+    }
 
 
     void processTurn() {
@@ -252,6 +265,15 @@ public:
                 handleRandomEvent(player.id);
                 isRandom = false;
             }
+
+            if (playerLost(player.id)) {
+                players.erase(players.begin() + player.id);
+                cout << "Player " << player.id << "lost";
+            }
+            if (playerWon(player.id)) {
+                cout << "Player " << player.id << "won";
+            }
+            //if (gameEnd())exit(0);
         }
 
         // Rotate priority player
@@ -260,7 +282,7 @@ public:
 
     void grantCredit(int player_id, int amount) {
         if (players[player_id].credit > 0) {
-            cout << "Ó èãðîêà íîìåð " << player_id << " óæå åñòü êðåäèò\n";
+            cout << "Player " << player_id << " has credit\n";
 
         }
         else if (players[player_id].money >= amount) {
@@ -272,11 +294,11 @@ public:
     }
 
     void insurancePayment(int player_id) {
-        if (players[player_id].money >= 200) {
+       
             players[player_id].money -= 200;
             players[player_id].insurance_months++;
             std::cout << "Player " << player_id << " paid for insurance. Total insurance months: " << players[player_id].insurance_months << std::endl;
-        }
+        
     }
 
     void upgradeFactory(int player_id) {
@@ -289,13 +311,9 @@ public:
 
     void chargeRent(int player_id) {
         int rent = (players[player_id].raw_material * 20) + (players[player_id].products * 40);
-        if (players[player_id].money >= rent) {
-            players[player_id].money -= rent;
-            std::cout << "Player " << player_id << " paid rent of " << rent << " currency." << std::endl;
-        }
-        else {
-            std::cout << "Player " << player_id << " could not pay rent of " << rent << " currency." << std::endl;
-        }
+        players[player_id].money -= rent;
+        std::cout << "Player " << player_id << " paid rent of " << rent << " currency." << std::endl;
+        
     }
 
     void handleRandomEvent(int player_id) {

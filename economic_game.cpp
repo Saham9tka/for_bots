@@ -15,7 +15,7 @@ int main() {
     std::cout << endl;
 
     // Simulate a few turns
-    for (int turn = 0; turn < 12; ++turn) {
+    while(!bank->gameEnd()) {
         bank->processTurn();
 
         // Example actions
@@ -23,11 +23,6 @@ int main() {
         bank->auctionSellOffer(1, 1, 80);
 
         bank->processAuctions();
-        bank->chargeRent(0);
-        bank->chargeRent(1);
-        bank->chargeRent(2);
-
-
         std::cout << endl;
         std::cout << endl;
         std::cout << endl;
