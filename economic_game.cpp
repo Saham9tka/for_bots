@@ -19,9 +19,12 @@ int main() {
         bank->processTurn();
 
         // Example actions
-        bank->auctionBuyOffer(0, 5, 60);
-        bank->auctionSellOffer(1, 1, 80);
-
+        bank->bankSellOffer();
+        bank->bankBuyOffer();
+        bank->auctionBuyOffer(1, 2, 200);
+        bank->auctionBuyOffer(0, 5, 400);
+        //bank->auctionBuyOffer(2, 4, 100);
+        
         bank->processAuctions();
         std::cout << endl;
         std::cout << endl;

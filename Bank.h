@@ -83,7 +83,7 @@ public:
         players.push_back(Player(id));
     }
 
-    void auctionBuyOffer(int player_id, int quantity, int price) {//Банк делает запросы на покупку
+    void auctionBuyOffer(int player_id, int quantity, int price) {//Игрок делает запросы на покупку
         if (players[player_id].money > quantity * price) {
             auction_buy_offers[player_id] = std::make_pair(quantity, price);
         }
@@ -91,7 +91,7 @@ public:
 
     }
 
-    void auctionSellOffer(int player_id, int quantity, int price) {//Банк делает запросы на продажу
+    void auctionSellOffer(int player_id, int quantity, int price) {//Игрок делает запросы на продажу
         if (players[player_id].products >= quantity) {
             auction_sell_offers[player_id] = std::make_pair(quantity, price);
         }
@@ -224,6 +224,7 @@ public:
         for (auto player : players) {
             if (playerWon(player.id)) return true;
         }
+        return false;
     }
 
 
@@ -267,8 +268,9 @@ public:
             }
 
             if (playerLost(player.id)) {
-                players.erase(players.begin() + player.id);
-                cout << "Player " << player.id << "lost";
+                cout << "Player " << player.id << " lost";
+                players.erase(players.begin()+player.id);
+                
             }
             if (playerWon(player.id)) {
                 cout << "Player " << player.id << "won";
@@ -313,7 +315,7 @@ public:
         int rent = (players[player_id].raw_material * 20) + (players[player_id].products * 40);
         players[player_id].money -= rent;
         std::cout << "Player " << player_id << " paid rent of " << rent << " currency." << std::endl;
-        
+        if (players[player_id].money < 0) cout << "Player "<<player_id<<" was unable to pay rent\n";
     }
 
     void handleRandomEvent(int player_id) {
