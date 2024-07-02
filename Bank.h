@@ -29,9 +29,9 @@ public:
     int repayment;
     int turns_before_credit_end;
     Player(int id) : id(id), raw_material(2), products(2), money(10000), credit(0), insurance_months(0),
-        repayment(0), turns_before_credit_end(0), automated_factories(0), factories(2), products_processing(0)
+        repayment(0), turns_before_credit_end(0), automated_factories(0), factories(2), products_processing(0), factory_upgrade_month(-1)
     {    }
-
+    Player(){}
     std::string getInfo() const {
         std::string info = "Информация об игроке " + std::to_string(id) + ":\n";
         info += "Сырье: " + std::to_string(raw_material) + "\n";
@@ -59,7 +59,7 @@ private:
     int priority_player_id;
 
 
-    std::vector<Player> players;
+    std::map<int,Player> players;
 
 
     std::map<int, std::pair<int, int>> auction_buy_offers; // <player_id, <quantity, price>>
@@ -72,15 +72,15 @@ public:
 
 
     void getPlayers() {
-        for (auto& player : players) {
-            std::cout << player.getInfo();
+        for (auto player=players.begin();player!=players.end();player++) {
+            std::cout << player->second.getInfo();
             std::cout << endl;
             std::cout << endl;
         }
     }
 
     void addPlayer(int id) {
-        players.push_back(Player(id));
+        players[id]= Player(id);
     }
 
     void auctionBuyOffer(int player_id, int quantity, int price) {//Игрок делает запросы на покупку
@@ -131,7 +131,7 @@ public:
                     if (a.second.second == b.second.second) {
                         if (a.first == priority_player_id) return true;
                         if (b.first == priority_player_id) return false;
-                        return (a.first - priority_player_id) % 4 < (b.first - priority_player_id) % 4; // Closest to priority player
+                        return (a.first - priority_player_id) % players.size() < (b.first - priority_player_id) % players.size(); // Closest to priority player
                     }
                     return a.second.second > b.second.second; // Higher price is better
                 });
@@ -158,7 +158,7 @@ public:
                     if (a.second.second == b.second.second) {
                         if (a.first == priority_player_id) return true;
                         if (b.first == priority_player_id) return false;
-                        return a.first < b.first; // Closest to priority player
+                        return (a.first - priority_player_id) % players.size() < (b.first - priority_player_id) % players.size(); // Closest to priority player
                     }
                     return a.second.second < b.second.second; // Lower price is better
                 });
@@ -222,7 +222,7 @@ public:
     bool gameEnd() {
         if (players.size() < 2) return true;
         for (auto player : players) {
-            if (playerWon(player.id)) return true;
+            if (playerWon(player.second.id)) return true;
         }
         return false;
     }
@@ -232,54 +232,69 @@ public:
         current_month++;
 
         bool isRandom = true;
-
-        for (auto& player : players) {
-            if (player.turns_before_credit_end > 0) {
+        bool start = false;
+        for (auto player = players.begin(); player != players.end(); ) {
+            if (start) {
+                player = players.begin();
+                start = false;
+            }
+            if (player->second.turns_before_credit_end > 0) {
                 //player.money -= player.repayment;
                 //player.credit -= player.repayment;
-                player.money -= player.credit / 12;
-                player.turns_before_credit_end--;
-                if (player.turns_before_credit_end == 0) {
-                    player.credit = 0;
+                player->second.money -= player->second.credit / 12;
+                player->second.turns_before_credit_end--;
+                if (player->second.turns_before_credit_end == 0) {
+                    player->second.credit = 0;
                 }
-                std::cout << "Player " << player.id << " repaid " << player.repayment << " currency of their credit. Remaining credit: " << player.credit << std::endl;
+                std::cout << "Player " << player->second.id << " repaid " << player->second.repayment << " currency of their credit. Remaining credit: " << player->second.credit << std::endl;
             }
 
-            if (player.insurance_months > 0) {
-                player.insurance_months--;
-                std::cout << "Player " << player.id << " has " << player.insurance_months << " months of insurance left." << std::endl;
+            if (player->second.insurance_months > 0) {
+                player->second.insurance_months--;
+                std::cout << "Player " << player->second.id << " has " << player->second.insurance_months << " months of insurance left." << std::endl;
             }
 
-            if (player.factory_upgrade_month == 0) {
-                player.money -= 1500;
-                player.factories--;
-                player.automated_factories++;
-                std::cout << "Player " << player.id << " upgraded a factory to automated." << std::endl;
+            if (player->second.factory_upgrade_month == 0) {
+                player->second.money -= 1500;
+                player->second.factories--;
+                player->second.automated_factories++;
+                std::cout << "Player " << player->second.id << " upgraded a factory to automated." << std::endl;
             }
-            else if (player.factory_upgrade_month > 0) {
-                player.factory_upgrade_month--;
+            else if (player->second.factory_upgrade_month > 0) {
+                player->second.factory_upgrade_month--;
             }
 
-            chargeRent(player.id);
+            chargeRent(player->second.id);
 
             if (isRandom) {
-                handleRandomEvent(player.id);
+                handleRandomEvent(player->second.id);
                 isRandom = false;
             }
 
-            if (playerLost(player.id)) {
-                cout << "Player " << player.id << " lost";
-                players.erase(players.begin()+player.id);
-                
+            
+            if (playerWon(player->second.id)) {
+                cout << "Player " << player->second.id << "won\n";
             }
-            if (playerWon(player.id)) {
-                cout << "Player " << player.id << "won";
+
+            if (playerLost(player->second.id)) {
+                cout << "Player " << player->second.id << " lost\n";
+                player=players.erase(player);
             }
+            else(player++);
             //if (gameEnd())exit(0);
         }
 
         // Rotate priority player
         priority_player_id = (priority_player_id + 1) % players.size();
+        for (auto player : players) {
+            std::cout << endl;
+            std::cout << endl;
+            std::cout << endl;
+            cout << player.second.getInfo();
+            std::cout << endl;
+            std::cout << endl;
+            std::cout << endl;
+        }
     }
 
     void grantCredit(int player_id, int amount) {
@@ -322,7 +337,7 @@ public:
         srand(time(0));
         int event_chance = rand() % 10;
         if (event_chance == 0) {
-
+            cout << '\n\n\n' << "RANDOM" << '\n\n\n';
             int event_type = rand() % 5;
 
             int inheritance = 1000 + rand() % 9000;
@@ -330,8 +345,8 @@ public:
             case 0:
                 std::cout << "Player " << player_id << " has a birthday. Other players must gift them." << std::endl;
                 for (auto& player : players) {
-                    if (player.id != player_id) {
-                        player.money -= 100;
+                    if (player.second.id != player_id) {
+                        player.second.money -= 100;
                         players[player_id].money += 100;
                     }
                 }

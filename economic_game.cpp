@@ -26,10 +26,7 @@ int main() {
         //bank->auctionBuyOffer(2, 4, 100);
         
         bank->processAuctions();
-        std::cout << endl;
-        std::cout << endl;
-        std::cout << endl;
-        bank->getPlayers();
+        
         std::cout << endl;
         std::cout << endl;
 
