@@ -21,6 +21,10 @@ private slots:
 
     void on_giveUpButton_clicked();
 
+    void displayBankStates();
+
+    void displayPlayerStates(std::string playerStateString);
+
 private:
     Ui::GameWindow *ui;
     Game gameState;

@@ -71,8 +71,13 @@
      <x>540</x>
      <y>50</y>
      <width>271</width>
-     <height>151</height>
+     <height>191</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string/>
@@ -82,10 +87,15 @@
    <property name="geometry">
     <rect>
      <x>540</x>
-     <y>230</y>
+     <y>260</y>
      <width>271</width>
-     <height>161</height>
+     <height>131</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string/>
