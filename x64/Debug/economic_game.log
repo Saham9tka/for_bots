@@ -1,0 +1,4 @@
+﻿  economic_game.cpp
+C:\Projects\C++\economic_game\economic_game\Bank.h(306,49): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+C:\Projects\C++\economic_game\economic_game\Bank.h(337,19): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  economic_game.vcxproj -> C:\Projects\C++\economic_game\x64\Debug\economic_game.exe

@@ -41,7 +41,7 @@ public:
         info += "Валюта: " + std::to_string(money) + "\n";
         info += "Кредит: " + std::to_string(credit) + "\n";
         info += "Месяцы страховки: " + std::to_string(insurance_months) + "\n";
-        info += "Месяцы до завершения улучшения фабрики: " + (factory_upgrade_month >= 0 ? std::to_string(factory_upgrade_month) : "не улучшается") + "\n";
+        info += "Месяцы до завершения \nулучшения фабрики: " + (factory_upgrade_month >= 0 ? std::to_string(factory_upgrade_month) : "не улучшается") + "\n";
         return info;
     }
 };
@@ -67,10 +67,22 @@ private:
 
 public:
     Bank() :current_month(0), raw_materials_for_sale(0), products_for_sale(0), raw_material_price(0), product_price(0), priority_player_id(0) {
+        bankSellOffer();
+        bankBuyOffer();
+    }
 
+    int getRaw_material_price(){return raw_material_price;}
+    int getProduct_price(){return product_price;}
+    int getProducts_for_sale(){return products_for_sale;}
+
+    int getRaw_materials_for_sale(){
+        return raw_materials_for_sale;
     }
 
 
+    std::map<int,Player> getPlayersMap(){
+        return players;
+    }
     void getPlayers() {
         for (auto player=players.begin();player!=players.end();player++) {
             std::cout << player->second.getInfo();

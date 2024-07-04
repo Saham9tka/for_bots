@@ -24,6 +24,7 @@ SOURCES += \
     youwinwindow.cpp
 
 HEADERS += \
+    Bank.h \
     errorwindow.h \
     game.h \
     gamewindow.h \

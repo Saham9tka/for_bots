@@ -2,7 +2,7 @@
 #define NEWGAMEWINDOW_H
 
 #include <QWidget>
-
+#include "game.h"
 namespace Ui {
 class NewGameWindow;
 }
@@ -34,6 +34,7 @@ private slots:
 
 private:
     Ui::NewGameWindow *ui;
+    Game* game;
 };
 
 #endif // NEWGAMEWINDOW_H

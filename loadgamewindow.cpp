@@ -21,6 +21,8 @@ void LoadGameWindow::on_continueGameButton_clicked()
 {
     Game* gameState = new Game{30000,2};
     GameWindow *gameWindow = new GameWindow(gameState);
+    // Bank* bank = readFileFunction();  когда появится загрузка
+    // GameWindow *gameWindow = new GameWindow(bank);
     gameWindow->show();
     this->hide();
 }

@@ -1,6 +1,5 @@
 #ifndef LOADGAMEWINDOW_H
 #define LOADGAMEWINDOW_H
-
 #include <QWidget>
 
 namespace Ui {

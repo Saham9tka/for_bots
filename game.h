@@ -5,13 +5,13 @@ class Game
 {
 public:
     Game();
-    Game(int _money, int _turnNumber);
-    int money;
+    Game(int players, int _turnNumber);
     int turnNumber;
+    int players;
 
     Game operator = (Game* _game)
     {
-        money=_game->money;
+        players = _game->players;
         turnNumber=_game->turnNumber;
         return *this;
     }
