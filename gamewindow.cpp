@@ -4,6 +4,7 @@
 #include "youlosewindow.h"
 #include "youwinwindow.h"
 #include "hideplayerstatswindow.h"
+#include <string>
 
 GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     : QWidget(parent)
@@ -12,6 +13,7 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     gameState=_gameState;
     ui->setupUi(this);
     setWindowTitle("Экономическая стратегия");
+    displayBankStates();
 
     ui->giveFactoryLabel->hide();
     ui->giveFactoryChoice->hide();
@@ -47,6 +49,7 @@ void GameWindow::on_nextTurnButton_clicked()
     if (turnNumber>4){
         turnNumber=1;
         roundNumber++;
+        displayBankStates();
     }
     ui->gamerNumber->setText("Игрок " + QString::number(turnNumber));
     ui->roundNumber->setText("Раунд " + QString::number(roundNumber));
@@ -68,5 +71,27 @@ void GameWindow::on_giveUpButton_clicked()
 {
     YouLoseWindow* youLoseWindow = new YouLoseWindow();
     youLoseWindow->show();
+}
+
+void GameWindow::displayBankStates(){
+    int materialPrice=rand()%401+100;
+    int materialAmount=rand()%5+1;
+    int resourcePrice=rand()%401+100;
+    int resourceAmount=rand()%5+1;
+
+    std::string bankStatesString="Продажа сырья: " + std::to_string(materialPrice)
+                             + "\nКоличество сырья: " + std::to_string(materialAmount)
+                             + "\nКупля ресурсов: " + std::to_string(resourcePrice)
+                             + "\nКоличество ресурсов: " + std::to_string(resourceAmount);
+
+    QString bankStateDisplay = QString::fromStdString(bankStatesString);
+
+    ui->bankStates->setText(bankStateDisplay);
+}
+
+void GameWindow::displayPlayerStates(std::string playerStateString){
+    QString playerStateDisplay = QString::fromStdString(playerStateString);
+
+    ui->playerStates->setText(playerStateDisplay);
 }
 
