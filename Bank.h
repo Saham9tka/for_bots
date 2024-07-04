@@ -7,12 +7,16 @@
 #include <ctime>
 using namespace std;
 
+enum class Event {
+    Fabric_burn, BirthDay, Skip,
+}
 
 class Player {
 public:
 
     string name;
 
+    bool lost;
     int factories;
     int automated_factories;
     int factory_upgrade_month;
@@ -28,7 +32,7 @@ public:
     int insurance_months;
     int repayment;
     int turns_before_credit_end;
-    Player(int id) : id(id), raw_material(2), products(2), money(10000), credit(0), insurance_months(0),
+    Player(int id) : id(id), raw_material(2), products(2), money(10000), credit(0), insurance_months(0),lost(false),
         repayment(0), turns_before_credit_end(0), automated_factories(0), factories(2), products_processing(0), factory_upgrade_month(-1)
     {    }
     Player(){}
@@ -163,7 +167,7 @@ public:
         }
 
         // Process sell offers
-        while (products_for_sale > 0 && !auction_buy_offers.empty()) {
+        while (products_for_sale > 0 && !auction_sell_offers.empty()) {
 
             auto best_sell_offer = std::min_element(auction_sell_offers.begin(), auction_sell_offers.end(),
                 [this](const auto& a, const auto& b) {
@@ -345,7 +349,7 @@ public:
         if (players[player_id].money < 0) cout << "Player "<<player_id<<" was unable to pay rent\n";
     }
 
-    void handleRandomEvent(int player_id) {
+    std::string handleRandomEvent(int player_id) {
         srand(time(0));
         int event_chance = rand() % 10;
         if (event_chance == 0) {
