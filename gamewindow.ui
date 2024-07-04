@@ -71,7 +71,7 @@
      <x>540</x>
      <y>50</y>
      <width>291</width>
-     <height>261</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="font">
@@ -88,7 +88,7 @@
     <rect>
      <x>540</x>
      <y>300</y>
-     <width>271</width>
+     <width>291</width>
      <height>131</height>
     </rect>
    </property>
@@ -281,16 +281,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QSpinBox" name="giveMoneyChoice">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>290</y>
-     <width>61</width>
-     <height>29</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QSpinBox" name="giveMaterialsChoice">
    <property name="geometry">
     <rect>
@@ -306,26 +296,6 @@
     <rect>
      <x>420</x>
      <y>370</y>
-     <width>61</width>
-     <height>29</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="sellResourcesPriceChoice">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>90</y>
-     <width>61</width>
-     <height>29</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="buyMaterialsPriceChoice">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>50</y>
      <width>61</width>
      <height>29</height>
     </rect>
@@ -414,6 +384,36 @@
    </property>
    <property name="text">
     <string>Взять страховку</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="buyMaterialsPriceChoice">
+   <property name="geometry">
+    <rect>
+     <x>352</x>
+     <y>50</y>
+     <width>61</width>
+     <height>28</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="sellProductPriceChoice">
+   <property name="geometry">
+    <rect>
+     <x>352</x>
+     <y>90</y>
+     <width>61</width>
+     <height>28</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="giveMoneyChoice">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>290</y>
+     <width>61</width>
+     <height>28</height>
+    </rect>
    </property>
   </widget>
  </widget>

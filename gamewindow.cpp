@@ -53,8 +53,8 @@ void checkHappyAccident(){
 
 void GameWindow::on_nextTurnButton_clicked()
 {
-    bank->auctionBuyOffer(gameState.turnNumber,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
-    //bank->auctionSellOffer(gameState.turnNumbers)
+    bank->auctionBuyOffer(turnNumber,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
+    bank->auctionSellOffer(turnNumber,ui->sellResourcesAmountChoice->text().toInt(),ui->sellProductPriceChoice->text().toInt());
 
     turnNumber++;
     checkHappyAccident();
