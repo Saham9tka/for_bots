@@ -82,6 +82,19 @@
     <string>Продолжить игру</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="backToMenuButton">
+   <property name="geometry">
+    <rect>
+     <x>202</x>
+     <y>320</y>
+     <width>101</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Вернуться</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

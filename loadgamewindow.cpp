@@ -2,6 +2,7 @@
 #include "gamewindow.h"
 #include "ui_loadgamewindow.h"
 #include "game.h"
+#include "menu.h"
 
 LoadGameWindow::LoadGameWindow(QWidget *parent)
     : QWidget(parent)
@@ -47,5 +48,13 @@ void LoadGameWindow::on_passwordInputLine_textChanged(const QString &arg1)
 {
     passwordIsInputted=true;
     unblockContinueGameButton(loginIsInputted, passwordIsInputted);
+}
+
+
+void LoadGameWindow::on_backToMenuButton_clicked()
+{
+    Menu* menu = new Menu();
+    menu->show();
+    this->hide();
 }
 
