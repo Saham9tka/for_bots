@@ -209,6 +209,7 @@ public:
             int automated_factories_temp = players[player_id].automated_factories;
 
             while (automated_factories_temp > 0 && material > 0) {
+                automated_factories_temp--;
                 material -= 4;
                 auto_processing += 4;
             }
@@ -223,6 +224,7 @@ public:
             int factories_temp = players[player_id].factories;
 
             while (factories_temp > 0 && material > 0) {
+                factories_temp--;
                 material -= 2;
                 default_processing += 2;
             }
