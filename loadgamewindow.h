@@ -23,6 +23,8 @@ private slots:
 
     void on_passwordInputLine_textChanged(const QString &arg1);
 
+    void on_backToMenuButton_clicked();
+
 private:
     Ui::LoadGameWindow *ui;
 };

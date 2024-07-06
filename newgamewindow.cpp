@@ -1,6 +1,7 @@
 #include "newgamewindow.h"
 #include "ui_newgamewindow.h"
 #include "gamewindow.h"
+#include "menu.h"
 
 NewGameWindow::NewGameWindow(QWidget *parent)
     : QWidget(parent)
@@ -79,5 +80,13 @@ void NewGameWindow::on_fourPlayerGameChoice_clicked()
     playerCountIsSettled=true;
     game->players=4;
     unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
+}
+
+
+void NewGameWindow::on_backToMenuButton_clicked()
+{
+    Menu* menu = new Menu();
+    menu->show();
+    this->hide();
 }
 

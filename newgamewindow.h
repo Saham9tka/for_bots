@@ -32,6 +32,8 @@ private slots:
 
     void on_fourPlayerGameChoice_clicked();
 
+    void on_backToMenuButton_clicked();
+
 private:
     Ui::NewGameWindow *ui;
     Game* game;
