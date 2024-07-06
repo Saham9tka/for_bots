@@ -2,10 +2,13 @@
 #define HAPPYACCIDENTWINDOW_H
 
 #include <QWidget>
-
 namespace Ui {
 class HappyAccidentWindow;
 }
+
+enum class Chance {
+    Fabric_burn, BirthDay, Skip, Inheritance, Crisis, No_Event
+};
 
 class HappyAccidentWindow : public QWidget
 {
@@ -15,7 +18,7 @@ public:
     explicit HappyAccidentWindow(QWidget *parent = nullptr);
     ~HappyAccidentWindow();
 
-    void generateRandomAccident();
+    void generateRandomAccident(Chance event);
 
 private:
     Ui::HappyAccidentWindow *ui;

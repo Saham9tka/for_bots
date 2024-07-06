@@ -14,30 +14,31 @@ HappyAccidentWindow::~HappyAccidentWindow()
     delete ui;
 }
 
-void HappyAccidentWindow::generateRandomAccident(){
+void HappyAccidentWindow::generateRandomAccident(Chance event){
 
-    QString happyBirthdayString ="<center><p>У вас день рождения!</p><p>Все игроки должны что-то</p><p>подарить имениннику.</p></center>";
+
+    QString happyBirthdayString ="<center><p>У вас день рождения!</p><p>Все игроки должны подарить</p><p>по 100 валюты имениннику.</p></center>";
     QString burntFactoryString ="<center><p>У вас сгорела фабрика!</p><p>Если вы что-либо перерабатывали,</p><p>ресурсы сгорели с ней.</p></center>";
-    QString bankCrisisString ="<center><p>В банке кризис!</p><p>Каждый игрок обязан отдать</p><p>что-то для банка.</p></center>";
+    QString bankCrisisString ="<center><p>В банке кризис!</p><p>Каждый игрок обязан отдать</p><p>500 валюты для банка.</p></center>";
     QString inheritageString ="<center><p>Вам пришло наследство!</p><p>Деньги будут высланы банком.</p></center>";
-    QString profitString ="<center><p>Большой день!</p><p>Банк объявляет акции.</p><p>Скидка 50% на все!</p></center>";
+    QString skipString ="<center><p>Пропуск хода!</p><p>Сотрудники требуют выходной!</p><p>Вы пропускаете текущий ход</p><p>в следствие отсутсвия сотрудников.</p></center>";
 
-    int happyNumber=rand()%5;
-    switch(happyNumber){
-    case 0:
+
+    switch(event){
+    case Chance::BirthDay:
         ui->happyAccidentDescriptionLabel->setText(happyBirthdayString);
         break;
-    case 1:
+    case Chance::Fabric_burn:
         ui->happyAccidentDescriptionLabel->setText(burntFactoryString);
         break;
-    case 2:
+    case Chance::Crisis:
         ui->happyAccidentDescriptionLabel->setText(bankCrisisString);
         break;
-    case 3:
+    case Chance::Inheritance:
         ui->happyAccidentDescriptionLabel->setText(inheritageString);
         break;
-    case 4:
-        ui->happyAccidentDescriptionLabel->setText(profitString);
+    case Chance::Skip:
+        ui->happyAccidentDescriptionLabel->setText(skipString);
         break;
     }
 

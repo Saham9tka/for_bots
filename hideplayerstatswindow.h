@@ -2,6 +2,7 @@
 #define HIDEPLAYERSTATSWINDOW_H
 
 #include <QWidget>
+#include <QShortcut>
 
 namespace Ui {
 class HidePlayerStatsWindow;

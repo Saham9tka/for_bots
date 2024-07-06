@@ -5,11 +5,10 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+
+#include "happyaccidentwindow.h"
 using namespace std;
 
-enum class Event {
-    Fabric_burn, BirthDay, Skip,
-}
 
 class Player {
 public:
@@ -254,6 +253,23 @@ public:
                 player = players.begin();
                 start = false;
             }
+
+            if (isRandom) {
+                Chance happy = handleRandomEvent(player->second.id);
+
+                if(happy != Chance::No_Event) {
+                    isRandom = false;
+
+                    HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
+                    happyAccidentWindow->generateRandomAccident(happy);
+                    happyAccidentWindow->show();
+                }
+
+                if(happy == Chance::Skip) {
+                    continue;
+                }
+            }
+
             if (player->second.turns_before_credit_end > 0) {
                 //player.money -= player.repayment;
                 //player.credit -= player.repayment;
@@ -282,11 +298,6 @@ public:
 
             chargeRent(player->second.id);
 
-            if (isRandom) {
-                handleRandomEvent(player->second.id);
-                isRandom = false;
-            }
-
             
             if (playerWon(player->second.id)) {
                 cout << "Player " << player->second.id << "won\n";
@@ -302,15 +313,6 @@ public:
 
         // Rotate priority player
         priority_player_id = (priority_player_id + 1) % players.size();
-        for (auto player : players) {
-            std::cout << endl;
-            std::cout << endl;
-            std::cout << endl;
-            cout << player.second.getInfo();
-            std::cout << endl;
-            std::cout << endl;
-            std::cout << endl;
-        }
     }
 
     void grantCredit(int player_id, int amount) {
@@ -349,49 +351,72 @@ public:
         if (players[player_id].money < 0) cout << "Player "<<player_id<<" was unable to pay rent\n";
     }
 
-    std::string handleRandomEvent(int player_id) {
+    Chance handleRandomEvent(int player_id) {
         srand(time(0));
-        int event_chance = rand() % 10;
+        int event_chance = rand() % 3;
         if (event_chance == 0) {
-            cout << '\n\n\n' << "RANDOM" << '\n\n\n';
+            //cout << '\n\n\n' << "RANDOM" << '\n\n\n';
             int event_type = rand() % 5;
-
             int inheritance = 1000 + rand() % 9000;
             switch (event_type) {
             case 0:
-                std::cout << "Player " << player_id << " has a birthday. Other players must gift them." << std::endl;
+                //std::cout << "Player " << player_id << " has a birthday. Other players must gift them." << std::endl;
+
                 for (auto& player : players) {
                     if (player.second.id != player_id) {
                         player.second.money -= 100;
                         players[player_id].money += 100;
                     }
                 }
+
+                return Chance::BirthDay;
+
                 break;
             case 1:
-                if (players[player_id].insurance_months = 0) {
-                    std::cout << "A factory burned down for player " << player_id << "." << std::endl;
+                if (players[player_id].insurance_months == 0) {
+                    //std::cout << "A factory burned down for player " << player_id << "." << std::endl;
+
                     if (players[player_id].factories > 0) {
                         players[player_id].factories--;
                     }
                     else if (players[player_id].automated_factories > 0) {
                         players[player_id].automated_factories--;
                     }
+                    else {
+                        players[player_id].money -= 15000;
+                    }
+
+                    return Chance::Fabric_burn;
                 }
                 break;
             case 2:
-
                 players[player_id].money += inheritance;
-                std::cout << "Player " << player_id << " received an inheritance of " << inheritance << " currency." << std::endl;
+
+                //std::cout << "Player " << player_id << " received an inheritance of " << inheritance << " currency." << std::endl;
+
+                return Chance::Inheritance;
                 break;
             case 3:
-                std::cout << "Player " << player_id << " gets a 50% discount on expenses for this turn." << std::endl;
+                //std::cout << "Player " << player_id << " skip the move." << std::endl;
+
+                return Chance::Skip;
+
                 // Implement discount logic
                 break;
             case 4:
-                std::cout << "Bank crisis! Player " << player_id << " loses 500 currency." << std::endl;
-                players[player_id].money -= 500;
+                //std::cout << "Bank crisis! Player " << player_id << " loses 500 currency." << std::endl;
+                //players[player_id].money -= 500;
+
+                for(auto& player : players) {
+                    player.second.money -= 500;
+                }
+
+                return Chance::Crisis;
                 break;
             }
+        }
+        else {
+            return Chance::No_Event;
         }
     }
 };
