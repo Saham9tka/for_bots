@@ -261,7 +261,7 @@ public:
                 player = players.begin();
                 start = false;
             }
-
+            qDebug()<<player->first<<'\n';
             // if (isRandom) {
             //     Chance happy = handleRandomEvent(player->second.id);
 
@@ -295,6 +295,7 @@ public:
             }
 
             if (player->second.factory_upgrade_month == 0) {
+                player->second.factory_upgrade_month=-1;
                 player->second.money -= 1500;
                 player->second.factories--;
                 player->second.automated_factories++;
@@ -306,7 +307,8 @@ public:
 
             chargeRent(player->second.id);
 
-            
+            makeProducts(player->first);
+
             if (playerWon(player->second.id)) {
                 cout << "Player " << player->second.id << "won\n";
             }
@@ -315,10 +317,10 @@ public:
                 cout << "Player " << player->second.id << " lost\n";
                 player=players.erase(player);
             }
-            else(player++);
+            else player++;
             //if (gameEnd())exit(0);
 
-            makeProducts(player->first);
+
         }
 
         // Rotate priority player

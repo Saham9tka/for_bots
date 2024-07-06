@@ -22,7 +22,11 @@ void HappyAccidentWindow::generateRandomAccident(Chance event, int currentPlayer
     QString notBurntFactoryString ="<center><p>У вас могла сгореть фабрика!</p><p>Страховка, взятая на месяц,</p><p>спасла фабрику и материалы.</p></center>";
     QString bankCrisisString ="<center><p>В банке кризис!</p><p>Каждый игрок обязан отдать</p><p>500 валюты для банка.</p></center>";
     QString inheritageString ="<center><p>Вам пришло наследство!</p><p>Деньги будут высланы банком.</p></center>";
-    QString skipString ="<center><p>Пропуск хода!</p><p>Сотрудники требуют выходной!</p><p>Вы пропускаете текущий ход</p><p>в следствие отсутсвия сотрудников.</p></center>";
+
+    QString curId=QString::number(currentPlayerId);
+    QString skipString ="<center><p>Пропуск хода!</p><p>Сотрудники требуют выходной!</p><p>Игрок "+ curId;
+    QString skipString_2 = " пропускает текущий ход</p><p>в следствие отсутсвия сотрудников.</p></center>";
+    skipString+=skipString_2;
 
 
     switch(event){
