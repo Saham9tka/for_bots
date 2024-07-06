@@ -14,11 +14,12 @@ HappyAccidentWindow::~HappyAccidentWindow()
     delete ui;
 }
 
-void HappyAccidentWindow::generateRandomAccident(Chance event){
+void HappyAccidentWindow::generateRandomAccident(Chance event, int currentPlayerId){
 
 
     QString happyBirthdayString ="<center><p>У вас день рождения!</p><p>Все игроки должны подарить</p><p>по 100 валюты имениннику.</p></center>";
     QString burntFactoryString ="<center><p>У вас сгорела фабрика!</p><p>Если вы что-либо перерабатывали,</p><p>ресурсы сгорели с ней.</p></center>";
+    QString notBurntFactoryString ="<center><p>У вас могла сгореть фабрика!</p><p>Страховка, взятая на месяц,</p><p>спасла фабрику и материалы.</p></center>";
     QString bankCrisisString ="<center><p>В банке кризис!</p><p>Каждый игрок обязан отдать</p><p>500 валюты для банка.</p></center>";
     QString inheritageString ="<center><p>Вам пришло наследство!</p><p>Деньги будут высланы банком.</p></center>";
     QString skipString ="<center><p>Пропуск хода!</p><p>Сотрудники требуют выходной!</p><p>Вы пропускаете текущий ход</p><p>в следствие отсутсвия сотрудников.</p></center>";
@@ -30,6 +31,9 @@ void HappyAccidentWindow::generateRandomAccident(Chance event){
         break;
     case Chance::Fabric_burn:
         ui->happyAccidentDescriptionLabel->setText(burntFactoryString);
+        break;
+    case Chance::Fabric_burn_not:
+        ui->happyAccidentDescriptionLabel->setText(notBurntFactoryString);
         break;
     case Chance::Crisis:
         ui->happyAccidentDescriptionLabel->setText(bankCrisisString);

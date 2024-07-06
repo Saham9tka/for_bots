@@ -24,7 +24,7 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     displayPlayerStates(bank->getPlayersMap()[1].getInfo());
 
     currentPlayerId=1;
-    bank->LoseMoney(3);
+    //bank->LoseMoney(3);
     ui->giveFactoryLabel->hide();
     ui->giveFactoryChoice->hide();
     ui->giveMoneyLabel->hide();
@@ -48,27 +48,13 @@ GameWindow::~GameWindow()
 }
 
 
-
 void GameWindow::on_nextTurnButton_clicked()
 {
-    ui->sellProductPriceChoice->clear();
-    ui->sellResourcesAmountChoice->clear();
-    ui->buyMaterialsAmountChoice->clear();
-    ui->buyMaterialsPriceChoice->clear();
-
-    ui->spinBox->clear();
-
-    ui->giveMaterialsChoice->clear();
-    ui->giveResourcesChoice->clear();
-    ui->giveFactoryChoice->setChecked(false);
-    ui->giveMoneyChoice->clear();
-
-    ui->lineEdit->clear();
-    ui->checkBox->setChecked(false);
-    ui->checkBox_2->setChecked(false);
 
     bank->auctionBuyOffer(currentPlayerId,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
     bank->auctionSellOffer(currentPlayerId,ui->sellResourcesAmountChoice->text().toInt(),ui->sellProductPriceChoice->text().toInt());
+
+    bank->makeMaterial(currentPlayerId, ui->spinBox->text().toInt());
 
     // turnNumber++;
     // if (turnNumber > bank->getPlayersMap().size()){
@@ -80,15 +66,19 @@ void GameWindow::on_nextTurnButton_clicked()
     // }
     int maxId=-1;
     for (auto it:bank->getPlayersMap()){
-        if(it.first>maxId)maxId=it.first;
+        if(it.first>maxId) maxId=it.first;
     }
     if(currentPlayerId==maxId){
+
         bank->processAuctions();
         bank->processTurn();
+
         currentPlayerId=bank->getPlayersMap().begin()->first;
         roundNumber++;
         turnNumber=currentPlayerId;
+
         displayBankStates();
+
     }
     else{
         bool next=false;
@@ -101,6 +91,43 @@ void GameWindow::on_nextTurnButton_clicked()
         }
         turnNumber=currentPlayerId;
     }
+
+    Chance happy = bank->handleRandomEvent(currentPlayerId);
+    if(happy != Chance::No_Event) {
+        HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
+        happyAccidentWindow->generateRandomAccident(happy, currentPlayerId);
+        happyAccidentWindow->show();
+    }
+    if(happy == Chance::Skip) {
+        int maxId=-1;
+        for (auto it:bank->getPlayersMap()){
+            if(it.first>maxId) maxId=it.first;
+        }
+        if(currentPlayerId==maxId){
+
+            bank->processAuctions();
+            bank->processTurn();
+
+            currentPlayerId=bank->getPlayersMap().begin()->first;
+            roundNumber++;
+            turnNumber=currentPlayerId;
+
+            displayBankStates();
+
+        }
+        else{
+            bool next=false;
+            for(auto it:bank->getPlayersMap()){
+                if(next){
+                    currentPlayerId=it.first;
+                    break;
+                }
+                if(it.first==currentPlayerId) next = true;
+            }
+            turnNumber=currentPlayerId;
+        }
+    }
+
     ui->gamerNumber->setText("Игрок " + QString::number(currentPlayerId));
     ui->roundNumber->setText("Раунд " + QString::number(roundNumber));
 
@@ -116,6 +143,22 @@ void GameWindow::on_nextTurnButton_clicked()
     //ui->giveMaterialsChoice->show();
     //ui->giveResourcesChoice->show();
     //ui->giveResourcesLabel->show();
+
+    ui->sellProductPriceChoice->setText("0");
+    ui->sellResourcesAmountChoice->setValue(0);
+    ui->buyMaterialsAmountChoice->setValue(0);
+    ui->buyMaterialsPriceChoice->setText("0");
+
+    ui->spinBox->setValue(0);
+
+    ui->giveMaterialsChoice->setValue(0);
+    ui->giveResourcesChoice->setValue(0);
+    ui->giveFactoryChoice->setChecked(false);
+    ui->giveMoneyChoice->setText(0);
+
+    ui->lineEdit->setText("0");
+    ui->checkBox->setChecked(false);
+    ui->checkBox_2->setChecked(false);
 }
 
 void GameWindow::on_giveUpButton_clicked()

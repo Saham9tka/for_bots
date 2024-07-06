@@ -200,40 +200,46 @@ public:
 
 
     void makeMaterial(int player_id, int material) {
+        if(material > 0) {
+            if (material > players[player_id].raw_material) {
+                std::cout << "Not enough raw material" << std::endl;
+            }
 
-        if (material > players[player_id].raw_material) {
-            std::cout << "Not enough raw material" << std::endl;
+            int auto_processing = 0, default_processing = 0;
+            int automated_factories_temp = players[player_id].automated_factories;
+
+            while (automated_factories_temp > 0 && material > 0) {
+                material -= 4;
+                auto_processing += 4;
+            }
+            if (material < 0) {
+                auto_processing += material;
+            }
+            players[player_id].money -= auto_processing * 20;
+
+
+
+
+            int factories_temp = players[player_id].factories;
+
+            while (factories_temp > 0 && material > 0) {
+                material -= 2;
+                default_processing += 2;
+            }
+            if (material < 0) {
+                default_processing += material;
+            }
+            players[player_id].money -= default_processing * 50;
+
+
+            players[player_id].products_processing = default_processing + auto_processing;
+            players[player_id].raw_material -= players[player_id].products_processing;
         }
+    }
 
-        int auto_processing = 0, default_processing = 0;
-        int automated_factories_temp = players[player_id].automated_factories;
-
-        while (automated_factories_temp > 0 && material > 0) {
-            material -= 4;
-            auto_processing += 4;
-        }
-        if (material < 0) {
-            auto_processing += material;
-        }
-        players[player_id].money -= auto_processing * 20;
-
-
-
-
-        int factories_temp = players[player_id].factories;
-
-        while (factories_temp > 0 && material > 0) {
-            material -= 2;
-            default_processing += 2;
-        }
-        if (material < 0) {
-            default_processing += material;
-        }
-        players[player_id].money -= default_processing * 50;
-
-
-        players[player_id].products_processing = default_processing + auto_processing;
-        players[player_id].raw_material -= players[player_id].products_processing;
+    void makeProducts(int player_id) {
+        players[player_id].products += players[player_id].products_processing;
+        players[player_id].products_processing = 0;
     }
 
     bool gameEnd() {
@@ -248,7 +254,7 @@ public:
     void processTurn() {
         current_month++;
 
-        bool isRandom = true;
+        //bool isRandom = true;
         bool start = false;
         for (auto player = players.begin(); player != players.end(); ) {
             if (start) {
@@ -256,21 +262,21 @@ public:
                 start = false;
             }
 
-            if (isRandom) {
-                Chance happy = handleRandomEvent(player->second.id);
+            // if (isRandom) {
+            //     Chance happy = handleRandomEvent(player->second.id);
 
-                if(happy != Chance::No_Event) {
-                    isRandom = false;
+            //     if(happy != Chance::No_Event) {
+            //         isRandom = false;
 
-                    HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
-                    happyAccidentWindow->generateRandomAccident(happy);
-                    happyAccidentWindow->show();
-                }
+            //         HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
+            //         happyAccidentWindow->generateRandomAccident(happy);
+            //         happyAccidentWindow->show();
+            //     }
 
-                if(happy == Chance::Skip) {
-                    continue;
-                }
-            }
+            //     if(happy == Chance::Skip) {
+            //         continue;
+            //     }
+            // }
 
             if (player->second.turns_before_credit_end > 0) {
                 //player.money -= player.repayment;
@@ -311,6 +317,8 @@ public:
             }
             else(player++);
             //if (gameEnd())exit(0);
+
+            makeProducts(player->first);
         }
 
         // Rotate priority player
@@ -355,7 +363,7 @@ public:
 
     Chance handleRandomEvent(int player_id) {
         srand(time(0));
-        int event_chance = rand() % 3;
+        int event_chance = rand() % 4;
         if (event_chance == 0) {
             //cout << '\n\n\n' << "RANDOM" << '\n\n\n';
             int event_type = rand() % 5;
@@ -380,15 +388,22 @@ public:
 
                     if (players[player_id].factories > 0) {
                         players[player_id].factories--;
+                        players[player_id].products_processing -= 2;
+                        if(players[player_id].products_processing < 0) players[player_id].products_processing=0;
                     }
                     else if (players[player_id].automated_factories > 0) {
                         players[player_id].automated_factories--;
+                        players[player_id].products_processing -= 4;
+                        if(players[player_id].products_processing < 0) players[player_id].products_processing=0;
                     }
                     else {
                         players[player_id].money -= 15000;
                     }
 
                     return Chance::Fabric_burn;
+                }
+                else {
+                    return Chance::Fabric_burn_not;
                 }
                 break;
             case 2:

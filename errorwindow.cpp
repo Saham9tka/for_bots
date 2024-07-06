@@ -7,6 +7,8 @@ errorWindow::errorWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Ошибка!");
+
+
 }
 
 errorWindow::~errorWindow()
