@@ -118,13 +118,13 @@ public:
 
     void bankSellOffer() {
         raw_materials_for_sale = rand() % 10 + 1; // Случайное количество сырья от 1 до 10
-        raw_material_price = rand() % 500 + 100; // Случайная цена от 100 до 600
+        raw_material_price = rand() % 100 + 100; // Случайная цена от 100 до 600
         std::cout << "Банк предлагает " << raw_materials_for_sale << " шт. сырья по цене " << raw_material_price << " валюты за шт.\n";
     }
 
     void bankBuyOffer() {
         products_for_sale = rand() % 10 + 1; // Случайное количество продукции от 1 до 10
-        product_price = rand() % 500 + 100; // Случайная цена от 100 до 600
+        product_price = rand() % 100 + 100; // Случайная цена от 100 до 600
         std::cout << "Банк готов купить " << products_for_sale << " шт. готовой продукции по цене " << product_price << " валюты за шт.\n";
     }
 
@@ -135,7 +135,7 @@ public:
     }
 
     bool playerWon(int player_id) {
-        if (players[player_id].money >50000) return true;
+        if (players[player_id].money > 50000) return true;
         return false;
     }
 

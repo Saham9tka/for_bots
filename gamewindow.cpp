@@ -51,6 +51,22 @@ GameWindow::~GameWindow()
 
 void GameWindow::on_nextTurnButton_clicked()
 {
+    ui->sellProductPriceChoice->clear();
+    ui->sellResourcesAmountChoice->clear();
+    ui->buyMaterialsAmountChoice->clear();
+    ui->buyMaterialsPriceChoice->clear();
+
+    ui->spinBox->clear();
+
+    ui->giveMaterialsChoice->clear();
+    ui->giveResourcesChoice->clear();
+    ui->giveFactoryChoice->setChecked(false);
+    ui->giveMoneyChoice->clear();
+
+    ui->lineEdit->clear();
+    ui->checkBox->setChecked(false);
+    ui->checkBox_2->setChecked(false);
+
     bank->auctionBuyOffer(currentPlayerId,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
     bank->auctionSellOffer(currentPlayerId,ui->sellResourcesAmountChoice->text().toInt(),ui->sellProductPriceChoice->text().toInt());
 

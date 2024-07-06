@@ -26,6 +26,7 @@ public:
     QLabel *label;
     QLabel *label_2;
     QPushButton *continueGameButton;
+    QPushButton *backToMenuButton;
 
     void setupUi(QWidget *LoadGameWindow)
     {
@@ -51,6 +52,9 @@ public:
         continueGameButton = new QPushButton(LoadGameWindow);
         continueGameButton->setObjectName(QString::fromUtf8("continueGameButton"));
         continueGameButton->setGeometry(QRect(160, 250, 191, 41));
+        backToMenuButton = new QPushButton(LoadGameWindow);
+        backToMenuButton->setObjectName(QString::fromUtf8("backToMenuButton"));
+        backToMenuButton->setGeometry(QRect(202, 320, 101, 29));
 
         retranslateUi(LoadGameWindow);
 
@@ -63,6 +67,7 @@ public:
         label->setText(QCoreApplication::translate("LoadGameWindow", "\320\233\320\276\320\263\320\270\320\275", nullptr));
         label_2->setText(QCoreApplication::translate("LoadGameWindow", "\320\237\320\260\321\200\320\276\320\273\321\214", nullptr));
         continueGameButton->setText(QCoreApplication::translate("LoadGameWindow", "\320\237\321\200\320\276\320\264\320\276\320\273\320\266\320\270\321\202\321\214 \320\270\320\263\321\200\321\203", nullptr));
+        backToMenuButton->setText(QCoreApplication::translate("LoadGameWindow", "\320\222\320\265\321\200\320\275\321\203\321\202\321\214\321\201\321\217", nullptr));
     } // retranslateUi
 
 };
