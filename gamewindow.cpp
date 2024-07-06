@@ -54,9 +54,15 @@ void GameWindow::on_nextTurnButton_clicked()
     bank->auctionBuyOffer(currentPlayerId,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
     bank->auctionSellOffer(currentPlayerId,ui->sellResourcesAmountChoice->text().toInt(),ui->sellProductPriceChoice->text().toInt());
     bank->makeMaterial(currentPlayerId, ui->spinBox->text().toInt());
+
     if(ui->checkBox->isChecked()){
         bank->upgradeFactory(currentPlayerId);
     }
+
+    if(ui->lineEdit->text().length() != 0) {
+        bank->grantCredit(currentPlayerId, ui->lineEdit->text().toInt());
+    }
+
     // turnNumber++;
     // if (turnNumber > bank->getPlayersMap().size()){
     //     bank->processAuctions();

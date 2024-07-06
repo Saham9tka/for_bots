@@ -285,10 +285,10 @@ public:
                 //player.credit -= player.repayment;
                 player->second.money -= player->second.credit / 12;
                 player->second.turns_before_credit_end--;
-                if (player->second.turns_before_credit_end == 0) {
-                    player->second.credit = 0;
-                }
                 std::cout << "Player " << player->second.id << " repaid " << player->second.repayment << " currency of their credit. Remaining credit: " << player->second.credit << std::endl;
+            }
+            else if (player->second.turns_before_credit_end == 0) {
+                player->second.credit = 0;
             }
 
             if (player->second.insurance_months > 0) {
@@ -338,15 +338,15 @@ public:
             players[player_id].credit += amount * 1.1;
             players[player_id].money += amount;
             players[player_id].repayment = players[player_id].credit / 12;
+            players[player_id].turns_before_credit_end = 12;
             std::cout << "Player " << player_id << " received a credit of " << amount << " currency. Total credit to repay: " << players[player_id].credit << std::endl;
         }
     }
 
     void insurancePayment(int player_id) {
-       
-            players[player_id].money -= 200;
-            players[player_id].insurance_months++;
-            std::cout << "Player " << player_id << " paid for insurance. Total insurance months: " << players[player_id].insurance_months << std::endl;
+        players[player_id].money -= 200;
+        players[player_id].insurance_months++;
+        std::cout << "Player " << player_id << " paid for insurance. Total insurance months: " << players[player_id].insurance_months << std::endl;
         
     }
 
