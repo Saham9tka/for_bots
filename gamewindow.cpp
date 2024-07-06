@@ -1,6 +1,7 @@
 #include "gamewindow.h"
 #include "ui_gamewindow.h"
 #include "happyaccidentwindow.h"
+#include <QShortcut>
 #include "youlosewindow.h"
 #include "youwinwindow.h"
 #include "hideplayerstatswindow.h"
@@ -22,6 +23,8 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     displayBankStates();
     displayPlayerStates(bank->getPlayersMap()[1].getInfo());
 
+    currentPlayerId=1;
+    bank->LoseMoney(3);
     ui->giveFactoryLabel->hide();
     ui->giveFactoryChoice->hide();
     ui->giveMoneyLabel->hide();
@@ -30,6 +33,8 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     ui->giveMaterialsChoice->hide();
     ui->giveResourcesChoice->hide();
     ui->giveResourcesLabel->hide();
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
+    connect(shortcut, &QShortcut::activated, this, &GameWindow::on_nextTurnButton_clicked);
 
    // connect(ui->field_00, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 }
@@ -42,30 +47,45 @@ GameWindow::~GameWindow()
     delete ui;
 }
 
-void checkHappyAccident(){
-    int happyNumber=rand()%10;
-    if (happyNumber==0){
-        HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
-        happyAccidentWindow->generateRandomAccident();
-        happyAccidentWindow->show();
-    }
-}
+
 
 void GameWindow::on_nextTurnButton_clicked()
 {
-    bank->auctionBuyOffer(turnNumber,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
-    bank->auctionSellOffer(turnNumber,ui->sellResourcesAmountChoice->text().toInt(),ui->sellProductPriceChoice->text().toInt());
+    bank->auctionBuyOffer(currentPlayerId,ui->buyMaterialsAmountChoice->text().toInt(),ui->buyMaterialsPriceChoice->text().toInt());
+    bank->auctionSellOffer(currentPlayerId,ui->sellResourcesAmountChoice->text().toInt(),ui->sellProductPriceChoice->text().toInt());
 
-    turnNumber++;
-    checkHappyAccident();
-    if (turnNumber > bank->getPlayersMap().size()){
+    // turnNumber++;
+    // if (turnNumber > bank->getPlayersMap().size()){
+    //     bank->processAuctions();
+    //     bank->processTurn();
+    //     turnNumber=1;
+    //     roundNumber++;
+    //     displayBankStates();
+    // }
+    int maxId=-1;
+    for (auto it:bank->getPlayersMap()){
+        if(it.first>maxId)maxId=it.first;
+    }
+    if(currentPlayerId==maxId){
         bank->processAuctions();
         bank->processTurn();
-        turnNumber=1;
+        currentPlayerId=bank->getPlayersMap().begin()->first;
         roundNumber++;
+        turnNumber=currentPlayerId;
         displayBankStates();
     }
-    ui->gamerNumber->setText("Игрок " + QString::number(turnNumber));
+    else{
+        bool next=false;
+        for(auto it:bank->getPlayersMap()){
+            if(next){
+                currentPlayerId=it.first;
+                break;
+            }
+            if(it.first==currentPlayerId) next = true;
+        }
+        turnNumber=currentPlayerId;
+    }
+    ui->gamerNumber->setText("Игрок " + QString::number(currentPlayerId));
     ui->roundNumber->setText("Раунд " + QString::number(roundNumber));
 
     HidePlayerStatsWindow* hidePlayerStatsWindow = new HidePlayerStatsWindow();

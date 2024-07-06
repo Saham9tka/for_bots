@@ -73,7 +73,9 @@ public:
         bankSellOffer();
         bankBuyOffer();
     }
-
+    void LoseMoney(int id){
+        players[id].money=-100;
+    }
     int getRaw_material_price(){return raw_material_price;}
     int getProduct_price(){return product_price;}
     int getProducts_for_sale(){return products_for_sale;}
