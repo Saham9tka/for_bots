@@ -10,6 +10,9 @@ Menu::Menu(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Меню");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 Menu::~Menu()

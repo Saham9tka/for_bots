@@ -11,6 +11,9 @@ NewGameWindow::NewGameWindow(QWidget *parent)
     game = new Game;
     ui->startGameButton->setEnabled(false);
     setWindowTitle("Регистрация");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 NewGameWindow::~NewGameWindow()

@@ -7,6 +7,9 @@ HappyAccidentWindow::HappyAccidentWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Счастливый случай!");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 HappyAccidentWindow::~HappyAccidentWindow()

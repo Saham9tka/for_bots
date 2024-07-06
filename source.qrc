@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/source">
+        <file>economy_icon.png</file>
+    </qresource>
+</RCC>

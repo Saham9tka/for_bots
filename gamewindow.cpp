@@ -14,6 +14,9 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Экономическая стратегия");
 
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
+
 
     bank=new Bank;
     for(int i =1;i<=_gameState->players;i++){
@@ -21,15 +24,6 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     }
     displayBankStates();
     displayPlayerStates(bank->getPlayersMap()[1].getInfo());
-
-    ui->giveFactoryLabel->hide();
-    ui->giveFactoryChoice->hide();
-    ui->giveMoneyLabel->hide();
-    ui->giveMoneyChoice->hide();
-    ui->giveMaterialsLabel->hide();
-    ui->giveMaterialsChoice->hide();
-    ui->giveResourcesChoice->hide();
-    ui->giveResourcesLabel->hide();
 
    // connect(ui->field_00, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 }
@@ -46,7 +40,7 @@ void checkHappyAccident(){
     int happyNumber=rand()%10;
     if (happyNumber==0){
         HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
-        happyAccidentWindow->generateRandomAccident();
+        //happyAccidentWindow->generateRandomAccident();
         happyAccidentWindow->show();
     }
 }

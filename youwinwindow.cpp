@@ -7,6 +7,9 @@ YouWinWindow::YouWinWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Вы победили");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 YouWinWindow::~YouWinWindow()

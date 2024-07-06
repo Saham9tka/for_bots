@@ -7,6 +7,9 @@ errorWindow::errorWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Ошибка!");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 errorWindow::~errorWindow()

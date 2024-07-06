@@ -7,6 +7,9 @@ YouLoseWindow::YouLoseWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Вы проиграли");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 YouLoseWindow::~YouLoseWindow()

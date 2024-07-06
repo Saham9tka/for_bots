@@ -11,6 +11,9 @@ LoadGameWindow::LoadGameWindow(QWidget *parent)
     ui->setupUi(this);
     ui->continueGameButton->setEnabled(false);
     setWindowTitle("Вход");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
 }
 
 LoadGameWindow::~LoadGameWindow()
