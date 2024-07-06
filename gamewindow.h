@@ -33,6 +33,7 @@ private:
     Bank *bank;
     Ui::GameWindow *ui;
     Game gameState;
+    int currentPlayerId;
 };
 
 #endif // GAMEWINDOW_H

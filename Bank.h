@@ -73,7 +73,9 @@ public:
         bankSellOffer();
         bankBuyOffer();
     }
-
+    void LoseMoney(int id){
+        players[id].money=-100;
+    }
     int getRaw_material_price(){return raw_material_price;}
     int getProduct_price(){return product_price;}
     int getProducts_for_sale(){return products_for_sale;}
@@ -116,13 +118,13 @@ public:
 
     void bankSellOffer() {
         raw_materials_for_sale = rand() % 10 + 1; // Случайное количество сырья от 1 до 10
-        raw_material_price = rand() % 500 + 100; // Случайная цена от 100 до 600
+        raw_material_price = rand() % 100 + 100; // Случайная цена от 100 до 600
         std::cout << "Банк предлагает " << raw_materials_for_sale << " шт. сырья по цене " << raw_material_price << " валюты за шт.\n";
     }
 
     void bankBuyOffer() {
         products_for_sale = rand() % 10 + 1; // Случайное количество продукции от 1 до 10
-        product_price = rand() % 500 + 100; // Случайная цена от 100 до 600
+        product_price = rand() % 100 + 100; // Случайная цена от 100 до 600
         std::cout << "Банк готов купить " << products_for_sale << " шт. готовой продукции по цене " << product_price << " валюты за шт.\n";
     }
 
@@ -133,7 +135,7 @@ public:
     }
 
     bool playerWon(int player_id) {
-        if (players[player_id].money >50000) return true;
+        if (players[player_id].money > 50000) return true;
         return false;
     }
 
@@ -198,40 +200,48 @@ public:
 
 
     void makeMaterial(int player_id, int material) {
+        if(material > 0) {
+            if (material > players[player_id].raw_material) {
+                std::cout << "Not enough raw material" << std::endl;
+            }
 
-        if (material > players[player_id].raw_material) {
-            std::cout << "Not enough raw material" << std::endl;
+            int auto_processing = 0, default_processing = 0;
+            int automated_factories_temp = players[player_id].automated_factories;
+
+            while (automated_factories_temp > 0 && material > 0) {
+                automated_factories_temp--;
+                material -= 4;
+                auto_processing += 4;
+            }
+            if (material < 0) {
+                auto_processing += material;
+            }
+            players[player_id].money -= auto_processing * 20;
+
+
+
+
+            int factories_temp = players[player_id].factories;
+
+            while (factories_temp > 0 && material > 0) {
+                factories_temp--;
+                material -= 2;
+                default_processing += 2;
+            }
+            if (material < 0) {
+                default_processing += material;
+            }
+            players[player_id].money -= default_processing * 50;
+
+
+            players[player_id].products_processing = default_processing + auto_processing;
+            players[player_id].raw_material -= players[player_id].products_processing;
         }
+    }
 
-        int auto_processing = 0, default_processing = 0;
-        int automated_factories_temp = players[player_id].automated_factories;
-
-        while (automated_factories_temp > 0 && material > 0) {
-            material -= 4;
-            auto_processing += 4;
-        }
-        if (material < 0) {
-            auto_processing += material;
-        }
-        players[player_id].money -= auto_processing * 20;
-
-
-
-
-        int factories_temp = players[player_id].factories;
-
-        while (factories_temp > 0 && material > 0) {
-            material -= 2;
-            default_processing += 2;
-        }
-        if (material < 0) {
-            default_processing += material;
-        }
-        players[player_id].money -= default_processing * 50;
-
-
-        players[player_id].products_processing = default_processing + auto_processing;
-        players[player_id].raw_material -= players[player_id].products_processing;
+    void makeProducts(int player_id) {
+        players[player_id].products += players[player_id].products_processing;
+        players[player_id].products_processing = 0;
     }
 
     bool gameEnd() {
@@ -246,39 +256,39 @@ public:
     void processTurn() {
         current_month++;
 
-        bool isRandom = true;
+        //bool isRandom = true;
         bool start = false;
         for (auto player = players.begin(); player != players.end(); ) {
             if (start) {
                 player = players.begin();
                 start = false;
             }
+            qDebug()<<player->first<<'\n';
+            // if (isRandom) {
+            //     Chance happy = handleRandomEvent(player->second.id);
 
-            if (isRandom) {
-                Chance happy = handleRandomEvent(player->second.id);
+            //     if(happy != Chance::No_Event) {
+            //         isRandom = false;
 
-                if(happy != Chance::No_Event) {
-                    isRandom = false;
+            //         HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
+            //         happyAccidentWindow->generateRandomAccident(happy);
+            //         happyAccidentWindow->show();
+            //     }
 
-                    HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
-                    happyAccidentWindow->generateRandomAccident(happy);
-                    happyAccidentWindow->show();
-                }
-
-                if(happy == Chance::Skip) {
-                    continue;
-                }
-            }
+            //     if(happy == Chance::Skip) {
+            //         continue;
+            //     }
+            // }
 
             if (player->second.turns_before_credit_end > 0) {
                 //player.money -= player.repayment;
                 //player.credit -= player.repayment;
                 player->second.money -= player->second.credit / 12;
                 player->second.turns_before_credit_end--;
-                if (player->second.turns_before_credit_end == 0) {
-                    player->second.credit = 0;
-                }
                 std::cout << "Player " << player->second.id << " repaid " << player->second.repayment << " currency of their credit. Remaining credit: " << player->second.credit << std::endl;
+            }
+            else if (player->second.turns_before_credit_end == 0) {
+                player->second.credit = 0;
             }
 
             if (player->second.insurance_months > 0) {
@@ -287,6 +297,7 @@ public:
             }
 
             if (player->second.factory_upgrade_month == 0) {
+                player->second.factory_upgrade_month=-1;
                 player->second.money -= 1500;
                 player->second.factories--;
                 player->second.automated_factories++;
@@ -298,7 +309,8 @@ public:
 
             chargeRent(player->second.id);
 
-            
+            makeProducts(player->first);
+
             if (playerWon(player->second.id)) {
                 cout << "Player " << player->second.id << "won\n";
             }
@@ -307,8 +319,10 @@ public:
                 cout << "Player " << player->second.id << " lost\n";
                 player=players.erase(player);
             }
-            else(player++);
+            else player++;
             //if (gameEnd())exit(0);
+
+
         }
 
         // Rotate priority player
@@ -324,15 +338,15 @@ public:
             players[player_id].credit += amount * 1.1;
             players[player_id].money += amount;
             players[player_id].repayment = players[player_id].credit / 12;
+            players[player_id].turns_before_credit_end = 12;
             std::cout << "Player " << player_id << " received a credit of " << amount << " currency. Total credit to repay: " << players[player_id].credit << std::endl;
         }
     }
 
     void insurancePayment(int player_id) {
-       
-            players[player_id].money -= 200;
-            players[player_id].insurance_months++;
-            std::cout << "Player " << player_id << " paid for insurance. Total insurance months: " << players[player_id].insurance_months << std::endl;
+        players[player_id].money -= 200;
+        players[player_id].insurance_months++;
+        std::cout << "Player " << player_id << " paid for insurance. Total insurance months: " << players[player_id].insurance_months << std::endl;
         
     }
 
@@ -353,7 +367,7 @@ public:
 
     Chance handleRandomEvent(int player_id) {
         srand(time(0));
-        int event_chance = rand() % 3;
+        int event_chance = rand() % 4;
         if (event_chance == 0) {
             //cout << '\n\n\n' << "RANDOM" << '\n\n\n';
             int event_type = rand() % 5;
@@ -378,15 +392,22 @@ public:
 
                     if (players[player_id].factories > 0) {
                         players[player_id].factories--;
+                        players[player_id].products_processing -= 2;
+                        if(players[player_id].products_processing < 0) players[player_id].products_processing=0;
                     }
                     else if (players[player_id].automated_factories > 0) {
                         players[player_id].automated_factories--;
+                        players[player_id].products_processing -= 4;
+                        if(players[player_id].products_processing < 0) players[player_id].products_processing=0;
                     }
                     else {
                         players[player_id].money -= 15000;
                     }
 
                     return Chance::Fabric_burn;
+                }
+                else {
+                    return Chance::Fabric_burn_not;
                 }
                 break;
             case 2:
