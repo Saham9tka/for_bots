@@ -14,10 +14,8 @@ class GameWindow : public QWidget
 
 public:
     explicit GameWindow(Game* _gameState, QWidget *parent = nullptr);
-    GameWindow(Bank* _bank,Game* _gameState){
-        gameState = _gameState;
-        bank = _bank;
-    }
+    GameWindow(Bank* _bank,Game _gameState);
+
     ~GameWindow();
 
 private slots:
@@ -29,8 +27,9 @@ private slots:
 
     void displayPlayerStates(std::string playerStateString);
 
+
 private:
-    Bank *bank;
+    Bank* bank;
     Ui::GameWindow *ui;
     Game gameState;
     int currentPlayerId;

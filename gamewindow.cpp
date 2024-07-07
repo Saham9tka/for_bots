@@ -274,3 +274,20 @@ void GameWindow::displayPlayerStates(std::string playerStateString){
     ui->playerStates->setText(playerStateDisplay);
 }
 
+GameWindow::GameWindow(Bank* _bank,Game _gameState):ui(new Ui::GameWindow){
+    gameState = _gameState;
+    bank = _bank;
+    ui->setupUi(this);
+    setWindowTitle("Экономическая стратегия");
+
+    QIcon economy_icon(":/source/economy_icon.png");
+    setWindowIcon(economy_icon);
+
+    displayBankStates();
+    currentPlayerId=bank->getPlayersMap().begin()->first;
+    displayPlayerStates(bank->getPlayersMap()[currentPlayerId].getInfo());
+
+    //bank->win(2);
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
+    connect(shortcut, &QShortcut::activated, this, &GameWindow::on_nextTurnButton_clicked);
+}
