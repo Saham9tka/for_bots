@@ -288,7 +288,8 @@ GameWindow::GameWindow(Bank* _bank,Game _gameState):ui(new Ui::GameWindow){
     currentPlayerId=bank->getPlayersMap().begin()->first;
     displayPlayerStates(bank->getPlayersMap()[currentPlayerId].getInfo());
 
-    //bank->win(2);
+    ui->gamerNumber->setText("Игрок " + QString::number(currentPlayerId));
+    ui->roundNumber->setText("Раунд " + QString::number(roundNumber));
     QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
     connect(shortcut, &QShortcut::activated, this, &GameWindow::on_nextTurnButton_clicked);
 }

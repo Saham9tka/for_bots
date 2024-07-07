@@ -22,8 +22,6 @@ private slots:
 
     void unblockStartGameButton(bool loginSettled, bool playerCountSettled);
 
-    void on_startGamePassword_textChanged(const QString &arg1);
-
     void on_onePlayerGameChoice_clicked();
 
     void on_twoPlayerGameChoice_clicked();
