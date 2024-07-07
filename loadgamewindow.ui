@@ -321,16 +321,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="passwordInputLine">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>160</y>
-     <width>281</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
@@ -349,29 +339,11 @@
     <string>Логин</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>160</y>
-     <width>63</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Пароль</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="continueGameButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>250</y>
+     <x>158</x>
+     <y>190</y>
      <width>191</width>
      <height>41</height>
     </rect>
@@ -383,8 +355,8 @@
   <widget class="QPushButton" name="backToMenuButton">
    <property name="geometry">
     <rect>
-     <x>202</x>
-     <y>320</y>
+     <x>200</x>
+     <y>260</y>
      <width>101</width>
      <height>29</height>
     </rect>

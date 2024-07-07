@@ -34,10 +34,9 @@ void LoadGameWindow::on_continueGameButton_clicked()
 }
 
 bool loginIsInputted=false;
-bool passwordIsInputted=false;
 
-void LoadGameWindow::unblockContinueGameButton(bool loginSettled, bool passwordSettled){
-    if (loginSettled==true&&passwordSettled==true){
+void LoadGameWindow::unblockContinueGameButton(bool loginSettled){
+    if (loginSettled==true){
         ui->continueGameButton->setEnabled(true);
     }
 }
@@ -45,16 +44,8 @@ void LoadGameWindow::unblockContinueGameButton(bool loginSettled, bool passwordS
 void LoadGameWindow::on_loginInputLine_textChanged(const QString &arg1)
 {
     loginIsInputted=true;
-    unblockContinueGameButton(loginIsInputted, passwordIsInputted);
+    unblockContinueGameButton(loginIsInputted);
 }
-
-
-void LoadGameWindow::on_passwordInputLine_textChanged(const QString &arg1)
-{
-    passwordIsInputted=true;
-    unblockContinueGameButton(loginIsInputted, passwordIsInputted);
-}
-
 
 void LoadGameWindow::on_backToMenuButton_clicked()
 {

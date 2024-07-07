@@ -20,7 +20,7 @@ private slots:
 
     void on_startGameLogin_textChanged(const QString &arg1);
 
-    void unblockStartGameButton(bool loginSettled, bool passwordSettled, bool playerCountSettled);
+    void unblockStartGameButton(bool loginSettled, bool playerCountSettled);
 
     void on_startGamePassword_textChanged(const QString &arg1);
 

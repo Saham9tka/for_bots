@@ -32,26 +32,19 @@ void NewGameWindow::on_startGameButton_clicked()
 }
 
 bool loginIsSettled=false;
-bool passwordIsSettled=false;
 bool playerCountIsSettled=false;
 
 void NewGameWindow::on_startGameLogin_textChanged(const QString &arg1)
 {
     loginIsSettled=true;
-    unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
+    unblockStartGameButton(loginIsSettled, playerCountIsSettled);
 
 }
 
-void NewGameWindow::unblockStartGameButton(bool loginSettled, bool passwordSettled, bool playerCountSettled){
-    if (loginSettled==true&&passwordSettled==true&&playerCountSettled==true){
+void NewGameWindow::unblockStartGameButton(bool loginSettled, bool playerCountSettled){
+    if (loginSettled==true&&playerCountSettled==true){
         ui->startGameButton->setEnabled(true);
     }
-}
-
-void NewGameWindow::on_startGamePassword_textChanged(const QString &arg1)
-{
-    passwordIsSettled=true;
-    unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
 }
 
 
@@ -59,7 +52,7 @@ void NewGameWindow::on_onePlayerGameChoice_clicked()
 {
     playerCountIsSettled=true;
     game->players=1;
-    unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
+    unblockStartGameButton(loginIsSettled, playerCountIsSettled);
 }
 
 
@@ -67,7 +60,7 @@ void NewGameWindow::on_twoPlayerGameChoice_clicked()
 {
     playerCountIsSettled=true;
     game->players=2;
-    unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
+    unblockStartGameButton(loginIsSettled, playerCountIsSettled);
 }
 
 
@@ -75,7 +68,7 @@ void NewGameWindow::on_threePlayerGameChoice_clicked()
 {
     playerCountIsSettled=true;
     game->players=3;
-    unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
+    unblockStartGameButton(loginIsSettled, playerCountIsSettled);
 }
 
 
@@ -83,7 +76,7 @@ void NewGameWindow::on_fourPlayerGameChoice_clicked()
 {
     playerCountIsSettled=true;
     game->players=4;
-    unblockStartGameButton(loginIsSettled, passwordIsSettled, playerCountIsSettled);
+    unblockStartGameButton(loginIsSettled, playerCountIsSettled);
 }
 
 
