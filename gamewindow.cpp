@@ -26,6 +26,7 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     displayBankStates();
     displayPlayerStates(bank->getPlayersMap()[1].getInfo());
     currentPlayerId=1;
+    bank->win(2);
     QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
     connect(shortcut, &QShortcut::activated, this, &GameWindow::on_nextTurnButton_clicked);
 
@@ -64,14 +65,10 @@ void GameWindow::on_nextTurnButton_clicked()
         bank->grantCredit(currentPlayerId, ui->lineEdit->text().toInt());
     }
 
-    // turnNumber++;
-    // if (turnNumber > bank->getPlayersMap().size()){
-    //     bank->processAuctions();
-    //     bank->processTurn();
-    //     turnNumber=1;
-    //     roundNumber++;
-    //     displayBankStates();
-    // }
+    if(ui->insuranceBox->isChecked()){
+        bank->insurancePayment(currentPlayerId);
+    }
+
     int maxId=-1;
     for (auto it:bank->getPlayersMap()){
         if(it.first>maxId) maxId=it.first;
@@ -143,14 +140,6 @@ void GameWindow::on_nextTurnButton_clicked()
     hidePlayerStatsWindow->show();
 
     displayPlayerStates(bank->getPlayersMap()[turnNumber].getInfo());
-    //ui->giveFactoryLabel->show();
-    //ui->giveFactoryChoice->show();
-    //ui->giveMoneyLabel->show();
-    //ui->giveMoneyChoice->show();
-    //ui->giveMaterialsLabel->show();
-    //ui->giveMaterialsChoice->show();
-    //ui->giveResourcesChoice->show();
-    //ui->giveResourcesLabel->show();
 
     ui->sellProductPriceChoice->setText("0");
     ui->sellResourcesAmountChoice->setValue(0);
@@ -162,7 +151,17 @@ void GameWindow::on_nextTurnButton_clicked()
 
     ui->lineEdit->setText("0");
     ui->checkBox->setChecked(false);
-    ui->checkBox_2->setChecked(false);
+    ui->insuranceBox->setChecked(false);
+
+    if(bank->playerWon(currentPlayerId)){  //Проверка на победу надо добавить текст какой именно игрок победил + надо закрывать игру мб
+        YouWinWindow* uwin = new YouWinWindow;
+        uwin->show();
+    }
+    //Если остался 1 игрок то тоже вызывается окно победы
+    // if(bank->getPlayersMap().size()==1){
+    //     YouWinWindow* uwin = new YouWinWindow;
+    //     uwin->show();
+    // }
 }
 
 void GameWindow::on_giveUpButton_clicked()
@@ -249,7 +248,7 @@ void GameWindow::on_giveUpButton_clicked()
 
     ui->lineEdit->setText("0");
     ui->checkBox->setChecked(false);
-    ui->checkBox_2->setChecked(false);
+    ui->insuranceBox->setChecked(false);
     YouLoseWindow* youLoseWindow = new YouLoseWindow();
     youLoseWindow->show();
 }

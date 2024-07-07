@@ -73,8 +73,11 @@ public:
         bankSellOffer();
         bankBuyOffer();
     }
+    void win(int id){
+        players[id].money=100000;
+    }
     void LoseMoney(int id){
-        players[id].money=-100;
+        players[id].money=-100000;
     }
     int getRaw_material_price(){return raw_material_price;}
     int getProduct_price(){return product_price;}
@@ -128,14 +131,13 @@ public:
         std::cout << "Банк готов купить " << products_for_sale << " шт. готовой продукции по цене " << product_price << " валюты за шт.\n";
     }
 
-
     bool playerLost(int player_id) {
         if (players[player_id].money < 0) return true;
         return false;
     }
 
     bool playerWon(int player_id) {
-        if (players[player_id].money > 50000) return true;
+        if (players[player_id].money > 30000) return true;
         return false;
     }
 

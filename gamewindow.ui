@@ -3598,7 +3598,7 @@
     <string>Взять кредит</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_2">
+  <widget class="QCheckBox" name="insuranceBox">
    <property name="geometry">
     <rect>
      <x>450</x>
