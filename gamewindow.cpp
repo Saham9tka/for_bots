@@ -277,6 +277,7 @@ void GameWindow::displayPlayerStates(std::string playerStateString){
 GameWindow::GameWindow(Bank* _bank,Game _gameState):ui(new Ui::GameWindow){
     gameState = _gameState;
     bank = _bank;
+    roundNumber = bank->getCurrent_month();
     ui->setupUi(this);
     setWindowTitle("Экономическая стратегия");
 

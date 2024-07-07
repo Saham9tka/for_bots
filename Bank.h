@@ -87,6 +87,9 @@ public:
         return raw_materials_for_sale;
     }
 
+    int getCurrent_month() {
+        return current_month;
+    }
 
     void saveToFile(const std::string& filename) const {
         std::ofstream file(filename);
@@ -381,7 +384,7 @@ public:
                 player = players.begin();
                 start = false;
             }
-            qDebug()<<player->first<<'\n';
+            //qDebug()<<player->first<<'\n';
             // if (isRandom) {
             //     Chance happy = handleRandomEvent(player->second.id);
 
@@ -496,7 +499,9 @@ public:
 
                 for (auto& player : players) {
                     if (player.second.id != player_id) {
-                        player.second.money -= 100;
+                        if(player.second.insurance_months == 0) {
+                            player.second.money -= 100;
+                        }
                         players[player_id].money += 100;
                     }
                 }
@@ -546,10 +551,18 @@ public:
                 //std::cout << "Bank crisis! Player " << player_id << " loses 500 currency." << std::endl;
                 //players[player_id].money -= 500;
 
-                for(auto& player : players) {
-                    player.second.money -= 500;
+                if (players[player_id].insurance_months == 0) {
+                    for(auto& player : players) {
+                        player.second.money -= 500;
+                    }
                 }
-
+                else {
+                    for(auto& player : players) {
+                        if(player.first != player_id) {
+                            player.second.money -= 500;
+                        }
+                    }
+                }
                 return Chance::Crisis;
                 break;
             }
