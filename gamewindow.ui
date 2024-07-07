@@ -4060,7 +4060,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Взять страховку</string>
+    <string>Страховка на один ход</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="buyMaterialsPriceChoice">

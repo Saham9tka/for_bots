@@ -24,6 +24,7 @@ NewGameWindow::~NewGameWindow()
 void NewGameWindow::on_startGameButton_clicked()
 {
     //Game* gameState = new Game();
+    game->login=ui->startGameLogin->text().toStdString();
     GameWindow* gameWindow = new GameWindow(game);
     gameWindow->setWindowTitle("Экономическая стратегия");
     gameWindow->show();

@@ -26,7 +26,7 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     displayBankStates();
     displayPlayerStates(bank->getPlayersMap()[1].getInfo());
     currentPlayerId=1;
-    bank->win(2);
+    //bank->win(2);
     QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
     connect(shortcut, &QShortcut::activated, this, &GameWindow::on_nextTurnButton_clicked);
 
@@ -81,7 +81,7 @@ void GameWindow::on_nextTurnButton_clicked()
         currentPlayerId=bank->getPlayersMap().begin()->first;
         roundNumber++;
         turnNumber=currentPlayerId;
-
+        bank->saveToFile(gameState.login);
         displayBankStates();
 
     }

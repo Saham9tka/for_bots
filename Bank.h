@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 
 #include "happyaccidentwindow.h"
 using namespace std;
@@ -43,7 +44,6 @@ public:
         info += "Готовая продукция: " + std::to_string(products) + "\n";
         info += "Валюта: " + std::to_string(money) + "\n";
         info += "Кредит: " + std::to_string(credit) + "\n";
-        info += "Месяцы страховки: " + std::to_string(insurance_months) + "\n";
         info += "Месяцы до завершения \nулучшения фабрики: " + (factory_upgrade_month >= 0 ? std::to_string(factory_upgrade_month) : "не улучшается") + "\n";
         return info;
     }
@@ -88,6 +88,108 @@ public:
     }
 
 
+    void saveToFile(const std::string& filename) const {
+        std::ofstream file(filename);
+        if (file.is_open()) {
+            file << current_month << "\n";
+            file << raw_materials_for_sale << "\n";
+            file << products_for_sale << "\n";
+            file << raw_material_price << "\n";
+            file << product_price << "\n";
+            file << priority_player_id << "\n";
+
+            file << players.size() << "\n";
+            for (const auto& pair : players) {
+                file << pair.first << "\n";
+                const Player& player = pair.second;
+                file << player.name << "\n";
+                file << player.lost << "\n";
+                file << player.factories << "\n";
+                file << player.automated_factories << "\n";
+                file << player.factory_upgrade_month << "\n";
+                file << player.id << "\n";
+                file << player.raw_material << "\n";
+                file << player.products << "\n";
+                file << player.products_processing << "\n";
+                file << player.money << "\n";
+                file << player.credit << "\n";
+                file << player.insurance_months << "\n";
+                file << player.repayment << "\n";
+                file << player.turns_before_credit_end << "\n";
+            }
+
+            file << auction_buy_offers.size() << "\n";
+            for (const auto& pair : auction_buy_offers) {
+                file << pair.first << " " << pair.second.first << " " << pair.second.second << "\n";
+            }
+
+            file << auction_sell_offers.size() << "\n";
+            for (const auto& pair : auction_sell_offers) {
+                file << pair.first << " " << pair.second.first << " " << pair.second.second << "\n";
+            }
+
+            file.close();
+        }
+    }
+
+    void loadFromFile(const std::string& filename) {
+        std::ifstream file(filename);
+        if (file.is_open()) {
+            file >> current_month;
+            file >> raw_materials_for_sale;
+            file >> products_for_sale;
+            file >> raw_material_price;
+            file >> product_price;
+            file >> priority_player_id;
+
+            size_t players_size;
+            file >> players_size;
+            players.clear();
+            for (size_t i = 0; i < players_size; ++i) {
+                int key;
+                file >> key;
+
+                Player player;
+                file.ignore(); // Ignore newline character
+                std::getline(file, player.name);
+                file >> player.lost;
+                file >> player.factories;
+                file >> player.automated_factories;
+                file >> player.factory_upgrade_month;
+                file >> player.id;
+                file >> player.raw_material;
+                file >> player.products;
+                file >> player.products_processing;
+                file >> player.money;
+                file >> player.credit;
+                file >> player.insurance_months;
+                file >> player.repayment;
+                file >> player.turns_before_credit_end;
+
+                players[key] = player;
+            }
+
+            size_t auction_buy_offers_size;
+            file >> auction_buy_offers_size;
+            auction_buy_offers.clear();
+            for (size_t i = 0; i < auction_buy_offers_size; ++i) {
+                int key, quantity, price;
+                file >> key >> quantity >> price;
+                auction_buy_offers[key] = std::make_pair(quantity, price);
+            }
+
+            size_t auction_sell_offers_size;
+            file >> auction_sell_offers_size;
+            auction_sell_offers.clear();
+            for (size_t i = 0; i < auction_sell_offers_size; ++i) {
+                int key, quantity, price;
+                file >> key >> quantity >> price;
+                auction_sell_offers[key] = std::make_pair(quantity, price);
+            }
+
+            file.close();
+        }
+    }
     std::map<int,Player> getPlayersMap(){
         return players;
     }
@@ -115,19 +217,21 @@ public:
         if (players[player_id].products >= quantity) {
             auction_sell_offers[player_id] = std::make_pair(quantity, price);
         }
-        else std::cout << "У игрока номер " << player_id << " недостаточно продукции\n";
+        else {
+            auction_sell_offers[player_id] = std::make_pair(players[player_id].products, price);
+        }
     }
 
 
     void bankSellOffer() {
         raw_materials_for_sale = rand() % 10 + 1; // Случайное количество сырья от 1 до 10
-        raw_material_price = rand() % 100 + 100; // Случайная цена от 100 до 600
+        raw_material_price = rand() % 150 + 100; // Случайная цена от 100 до 249
         std::cout << "Банк предлагает " << raw_materials_for_sale << " шт. сырья по цене " << raw_material_price << " валюты за шт.\n";
     }
 
     void bankBuyOffer() {
         products_for_sale = rand() % 10 + 1; // Случайное количество продукции от 1 до 10
-        product_price = rand() % 100 + 100; // Случайная цена от 100 до 600
+        product_price = rand() % 300 + 100; // Случайная цена от 100 до 399
         std::cout << "Банк готов купить " << products_for_sale << " шт. готовой продукции по цене " << product_price << " валюты за шт.\n";
     }
 

@@ -23,10 +23,11 @@ LoadGameWindow::~LoadGameWindow()
 
 void LoadGameWindow::on_continueGameButton_clicked()
 {
-    Game* gameState = new Game{30000,2};
-    GameWindow *gameWindow = new GameWindow(gameState);
-    // Bank* bank = readFileFunction();  когда появится загрузка
-    // GameWindow *gameWindow = new GameWindow(bank);
+    //Game* gameState = new Game{30000,2,ui->loginInputLine->text().toStdString()};
+    //GameWindow *gameWindow = new GameWindow(gameState);
+    Bank* bank = new Bank;  //когда появится загрузка
+    Game* gameState = new Game(bank->getPlayersMap().size(),0,ui->loginInputLine->text().toStdString());
+    GameWindow *gameWindow = new GameWindow(bank,gameState);
     gameWindow->show();
     this->hide();
 }
