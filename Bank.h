@@ -163,6 +163,12 @@ public:
                 raw_materials_for_sale -= quantity;
                 std::cout << "Player " << player_id << " bought " << quantity << " raw materials for " << price * quantity << " currency." << std::endl;
             }
+            else if (raw_materials_for_sale>0){
+                players[player_id].raw_material += raw_materials_for_sale;
+                players[player_id].money -= price * raw_materials_for_sale;
+                raw_materials_for_sale = 0;
+                std::cout << "Player " << player_id << " bought " << raw_materials_for_sale << " raw materials for " << price * raw_materials_for_sale << " currency." << std::endl;
+            }
 
             auction_buy_offers.erase(best_buy_offer->first);
         }
@@ -170,15 +176,15 @@ public:
         // Process sell offers
         while (products_for_sale > 0 && !auction_sell_offers.empty()) {
 
-            auto best_sell_offer = std::min_element(auction_sell_offers.begin(), auction_sell_offers.end(),
-                [this](const auto& a, const auto& b) {
-                    if (a.second.second == b.second.second) {
-                        if (a.first == priority_player_id) return true;
-                        if (b.first == priority_player_id) return false;
-                        return (a.first - priority_player_id) % players.size() < (b.first - priority_player_id) % players.size(); // Closest to priority player
-                    }
-                    return a.second.second < b.second.second; // Lower price is better
-                });
+        auto best_sell_offer = std::min_element(auction_sell_offers.begin(), auction_sell_offers.end(),
+    [this](const auto& a, const auto& b) {
+    if (a.second.second == b.second.second) {
+    if (a.first == priority_player_id) return true;
+    if (b.first == priority_player_id) return false;
+    return (a.first - priority_player_id) % players.size() < (b.first - priority_player_id) % players.size(); // Closest to priority player
+     }
+     return a.second.second < b.second.second; // Lower price is better
+            });
 
             int player_id = best_sell_offer->first;
             int quantity = best_sell_offer->second.first;
@@ -189,6 +195,12 @@ public:
                 players[player_id].money += price * quantity;
                 products_for_sale -= quantity;
                 std::cout << "Player " << player_id << " sold " << quantity << " products for " << price * quantity << " currency." << std::endl;
+            }
+            else if (products_for_sale>0){
+                players[player_id].products -= products_for_sale;
+                players[player_id].money += price * products_for_sale;
+                products_for_sale -= products_for_sale;
+                std::cout << "Player " << player_id << " sold " << products_for_sale << " products for " << price * products_for_sale << " currency." << std::endl;
             }
 
             auction_sell_offers.erase(best_sell_offer);
@@ -202,7 +214,7 @@ public:
     void makeMaterial(int player_id, int material) {
         if(material > 0) {
             if (material > players[player_id].raw_material) {
-                std::cout << "Not enough raw material" << std::endl;
+                material=players[player_id].raw_material;
             }
 
             int auto_processing = 0, default_processing = 0;

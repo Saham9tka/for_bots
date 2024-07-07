@@ -25,7 +25,9 @@ GameWindow::GameWindow(Game* _gameState, QWidget *parent)
     }
     displayBankStates();
     displayPlayerStates(bank->getPlayersMap()[1].getInfo());
-
+    currentPlayerId=1;
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Return), this);
+    connect(shortcut, &QShortcut::activated, this, &GameWindow::on_nextTurnButton_clicked);
 
    // connect(ui->field_00, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 }
@@ -165,6 +167,89 @@ void GameWindow::on_nextTurnButton_clicked()
 
 void GameWindow::on_giveUpButton_clicked()
 {
+    bank->LoseMoney(currentPlayerId);
+    int maxId=-1;
+    for (auto it:bank->getPlayersMap()){
+        if(it.first>maxId) maxId=it.first;
+    }
+    if(currentPlayerId==maxId){
+
+        bank->processAuctions();
+        bank->processTurn();
+
+        currentPlayerId=bank->getPlayersMap().begin()->first;
+        roundNumber++;
+        turnNumber=currentPlayerId;
+
+        displayBankStates();
+
+    }
+    else{
+        bool next=false;
+        for(auto it:bank->getPlayersMap()){
+            if(next){
+                currentPlayerId=it.first;
+                break;
+            }
+            if(it.first==currentPlayerId) next = true;
+        }
+        turnNumber=currentPlayerId;
+    }
+
+    Chance happy = bank->handleRandomEvent(currentPlayerId);
+    if(happy != Chance::No_Event) {
+        HappyAccidentWindow* happyAccidentWindow = new HappyAccidentWindow();
+        happyAccidentWindow->generateRandomAccident(happy, currentPlayerId);
+        happyAccidentWindow->show();
+    }
+    if(happy == Chance::Skip) {
+        int maxId=-1;
+        for (auto it:bank->getPlayersMap()){
+            if(it.first>maxId) maxId=it.first;
+        }
+        if(currentPlayerId==maxId){
+
+            bank->processAuctions();
+            bank->processTurn();
+
+            currentPlayerId=bank->getPlayersMap().begin()->first;
+            roundNumber++;
+            turnNumber=currentPlayerId;
+
+            displayBankStates();
+
+        }
+        else{
+            bool next=false;
+            for(auto it:bank->getPlayersMap()){
+                if(next){
+                    currentPlayerId=it.first;
+                    break;
+                }
+                if(it.first==currentPlayerId) next = true;
+            }
+            turnNumber=currentPlayerId;
+        }
+    }
+
+    ui->gamerNumber->setText("Игрок " + QString::number(currentPlayerId));
+    ui->roundNumber->setText("Раунд " + QString::number(roundNumber));
+
+    HidePlayerStatsWindow* hidePlayerStatsWindow = new HidePlayerStatsWindow();
+    hidePlayerStatsWindow->show();
+
+    displayPlayerStates(bank->getPlayersMap()[turnNumber].getInfo());
+
+    ui->sellProductPriceChoice->setText("0");
+    ui->sellResourcesAmountChoice->setValue(0);
+    ui->buyMaterialsAmountChoice->setValue(0);
+    ui->buyMaterialsPriceChoice->setText("0");
+
+    ui->spinBox->setValue(0);
+
+    ui->lineEdit->setText("0");
+    ui->checkBox->setChecked(false);
+    ui->checkBox_2->setChecked(false);
     YouLoseWindow* youLoseWindow = new YouLoseWindow();
     youLoseWindow->show();
 }
